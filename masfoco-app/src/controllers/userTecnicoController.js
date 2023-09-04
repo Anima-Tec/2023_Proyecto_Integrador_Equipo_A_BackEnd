@@ -1,7 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Obtener todos los usuarios técnicos
 exports.getAllUserTecnicos = async (req, res) => {
   try {
     const userTecnicos = await prisma.usuarioTecnico.findMany();
@@ -12,7 +11,6 @@ exports.getAllUserTecnicos = async (req, res) => {
   }
 };
 
-// Obtener un usuario técnico por ID
 exports.getUserTecnicoById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -29,7 +27,6 @@ exports.getUserTecnicoById = async (req, res) => {
   }
 };
 
-// Crear un nuevo usuario técnico
 exports.createUserTecnico = async (req, res) => {
   const { nombre, correo } = req.body;
   try {
@@ -46,7 +43,6 @@ exports.createUserTecnico = async (req, res) => {
   }
 };
 
-// Actualizar un usuario técnico por ID
 exports.updateUserTecnico = async (req, res) => {
   const { id } = req.params;
   const { nombre, correo } = req.body;
@@ -65,7 +61,6 @@ exports.updateUserTecnico = async (req, res) => {
   }
 };
 
-// Eliminar un usuario técnico por ID
 exports.deleteUserTecnico = async (req, res) => {
   const { id } = req.params;
   try {

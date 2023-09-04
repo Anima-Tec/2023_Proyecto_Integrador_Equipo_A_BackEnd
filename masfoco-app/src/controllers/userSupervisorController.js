@@ -1,7 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Obtener todos los supervisores
 exports.getAllSupervisors = async (req, res) => {
   try {
     const supervisors = await prisma.usuarioSupervisor.findMany();
@@ -12,7 +11,6 @@ exports.getAllSupervisors = async (req, res) => {
   }
 };
 
-// Obtener un supervisor por ID
 exports.getSupervisorById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -29,7 +27,6 @@ exports.getSupervisorById = async (req, res) => {
   }
 };
 
-// Crear un nuevo supervisor
 exports.createSupervisor = async (req, res) => {
   const { nombre, correo } = req.body;
   try {
@@ -46,7 +43,6 @@ exports.createSupervisor = async (req, res) => {
   }
 };
 
-// Actualizar un supervisor por ID
 exports.updateSupervisor = async (req, res) => {
   const { id } = req.params;
   const { nombre, correo } = req.body;
@@ -65,7 +61,6 @@ exports.updateSupervisor = async (req, res) => {
   }
 };
 
-// Eliminar un supervisor por ID
 exports.deleteSupervisor = async (req, res) => {
   const { id } = req.params;
   try {

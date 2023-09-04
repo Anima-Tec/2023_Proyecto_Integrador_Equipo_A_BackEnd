@@ -1,20 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const userSupervisorController = require('../controllers/userSupervisorController');
+const reportController = require('../controllers/reportController');
 
-// Ruta para obtener todos los supervisores
-router.get('/', userSupervisorController.getAllSupervisors);
+router.get('/', reportController.getAllReports);
 
-// Ruta para obtener un supervisor por ID
-router.get('/:id', userSupervisorController.getSupervisorById);
+router.get('/:id', reportController.getReportById);
 
-// Ruta para crear un nuevo supervisor
-router.post('/', userSupervisorController.createSupervisor);
+router.post('/', reportController.createReport);
 
-// Ruta para actualizar un supervisor por ID
-router.put('/:id', userSupervisorController.updateSupervisor);
+router.put('/:id', reportController.updateReport);
 
-// Ruta para eliminar un supervisor por ID
-router.delete('/:id', userSupervisorController.deleteSupervisor);
+router.delete('/:id', reportController.deleteReport);
 
 module.exports = router;

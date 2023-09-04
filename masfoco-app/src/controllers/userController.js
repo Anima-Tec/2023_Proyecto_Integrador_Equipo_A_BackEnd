@@ -1,7 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// Obtener todos los usuarios
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await prisma.usuario.findMany();
@@ -12,7 +11,6 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// Obtener un usuario por ID
 exports.getUserById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -29,7 +27,6 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-// Crear un nuevo usuario
 exports.createUser = async (req, res) => {
   const { nombre, correo, idOficina } = req.body;
   try {
@@ -47,7 +44,6 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Actualizar un usuario por ID
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
   const { nombre, correo, idOficina } = req.body;
@@ -67,7 +63,6 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// Eliminar un usuario por ID
 exports.deleteUser = async (req, res) => {
   const { id } = req.params;
   try {
