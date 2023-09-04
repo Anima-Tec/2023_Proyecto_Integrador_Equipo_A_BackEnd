@@ -1,7 +1,7 @@
 {
   "name": "masfoco-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "1. Clona este repositorio en tu máquina local.\r 2. Asegúrate de tener Node.js instalado.\r 3. Instala las dependencias usando `npm install`.\r 4. Crea un archivo `.env` en la raíz del proyecto y define las siguientes variables de entorno:",
   "main": ".src/app.js",
   "scripts": {
     "start": "node src/app.js"
@@ -10,9 +10,13 @@
   "author": "Fernando Escobal",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.2.0"
   }
 }
