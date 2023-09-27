@@ -1,6 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const userTecnicoController = require('../controllers/userTecnicoController');
+import {express} from'express';
+import {router} from express.Router();
+import {userTecnicoController} from'../controllers/userTecnicoController';
 
 router.get('/', userTecnicoController.getAllUserTecnicos);
 

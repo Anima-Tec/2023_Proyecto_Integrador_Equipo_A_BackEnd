@@ -1,6 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const reportController = require('../controllers/reportController');
+import {express} from'express';
+import {router} from express.Router();
+import {reportController} from '../controllers/reportController';
 
 router.get('/', reportController.getAllReports);
 

@@ -1,7 +1,7 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from'@prisma/client';
 const prisma = new PrismaClient();
 
-exports.getAllUsers = async (req, res) => {
+getAllUsers = async (req, res) => {
   try {
     const users = await prisma.usuario.findMany();
     res.json(users);
@@ -11,7 +11,7 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-exports.getUserById = async (req, res) => {
+getUserById = async (req, res) => {
   const { id } = req.params;
   try {
     const user = await prisma.usuario.findUnique({
@@ -27,7 +27,7 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-exports.createUser = async (req, res) => {
+createUser = async (req, res) => {
   const { nombre, correo, idOficina } = req.body;
   try {
     const newUser = await prisma.usuario.create({
@@ -44,7 +44,7 @@ exports.createUser = async (req, res) => {
   }
 };
 
-exports.updateUser = async (req, res) => {
+updateUser = async (req, res) => {
   const { id } = req.params;
   const { nombre, correo, idOficina } = req.body;
   try {
@@ -63,7 +63,7 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-exports.deleteUser = async (req, res) => {
+deleteUser = async (req, res) => {
   const { id } = req.params;
   try {
     await prisma.usuario.delete({
@@ -75,3 +75,5 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ error: 'Something went wrong!' });
   }
 };
+
+export { getAllUsers, getUserById, createUser, updateUser, deleteUser}

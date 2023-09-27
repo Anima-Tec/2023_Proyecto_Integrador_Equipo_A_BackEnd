@@ -1,21 +1,21 @@
-const express = require('express');
-const morgan = require('morgan');
-const cors = require('cors');
-
-require('dotenv').config();
+import {express} from'express';
+import {morgan} from'morgan';
+import {cors} from('cors');
+import {reportRoutes} from'./routes/reportRoutes';
+import {userRoutes} from'./routes/userRoutes';
+import {userSupervisorRoutes} from'./routes/userSupervisorRoutes'; 
+import {userTecnicoRoutes} from'./routes/userTecnicoRoutes';
+import { checkPortEnv } from './src/envChecker';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+checkPortEnv();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 app.use(cors());
-
-const reportRoutes = require('./routes/reportRoutes');
-const userRoutes = require('./routes/userRoutes');
-const userSupervisorRoutes = require('./routes/userSupervisorRoutes'); 
-const userTecnicoRoutes = require('./routes/userTecnicoRoutes');
 
 app.use('/reports', reportRoutes);
 app.use('/users', userRoutes);

@@ -1,7 +1,7 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from'@prisma/client';
 const prisma = new PrismaClient();
 
-exports.getAllSupervisors = async (req, res) => {
+getAllSupervisors = async (req, res) => {
   try {
     const supervisors = await prisma.usuarioSupervisor.findMany();
     res.json(supervisors);
@@ -11,7 +11,7 @@ exports.getAllSupervisors = async (req, res) => {
   }
 };
 
-exports.getSupervisorById = async (req, res) => {
+getSupervisorById = async (req, res) => {
   const { id } = req.params;
   try {
     const supervisor = await prisma.usuarioSupervisor.findUnique({
@@ -27,7 +27,7 @@ exports.getSupervisorById = async (req, res) => {
   }
 };
 
-exports.createSupervisor = async (req, res) => {
+createSupervisor = async (req, res) => {
   const { nombre, correo } = req.body;
   try {
     const newSupervisor = await prisma.usuarioSupervisor.create({
@@ -43,7 +43,7 @@ exports.createSupervisor = async (req, res) => {
   }
 };
 
-exports.updateSupervisor = async (req, res) => {
+updateSupervisor = async (req, res) => {
   const { id } = req.params;
   const { nombre, correo } = req.body;
   try {
@@ -61,7 +61,7 @@ exports.updateSupervisor = async (req, res) => {
   }
 };
 
-exports.deleteSupervisor = async (req, res) => {
+deleteSupervisor = async (req, res) => {
   const { id } = req.params;
   try {
     await prisma.usuarioSupervisor.delete({
@@ -73,3 +73,4 @@ exports.deleteSupervisor = async (req, res) => {
     res.status(500).json({ error: 'Something went wrong!' });
   }
 };
+export { getAllSupervisors, getSupervisorById, createSupervisor, updateSupervisor, deleteSupervisor}

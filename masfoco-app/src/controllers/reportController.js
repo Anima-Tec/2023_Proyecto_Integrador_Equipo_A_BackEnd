@@ -1,7 +1,7 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from'@prisma/client';
 const prisma = new PrismaClient();
 
-exports.getAllReports = async (req, res) => {
+getAllReports = async (req, res) => {
   try {
     const reports = await prisma.reporte.findMany();
     res.json(reports);
@@ -11,7 +11,7 @@ exports.getAllReports = async (req, res) => {
   }
 };
 
-exports.getReportById = async (req, res) => {
+getReportById = async (req, res) => {
   const { id } = req.params;
   try {
     const report = await prisma.reporte.findUnique({
@@ -27,7 +27,7 @@ exports.getReportById = async (req, res) => {
   }
 };
 
-exports.createReport = async (req, res) => {
+createReport = async (req, res) => {
   const { titulo, descripcion, categoria, prioridad, estado, idUsuario } = req.body;
   try {
     const newReport = await prisma.reporte.create({
@@ -48,7 +48,7 @@ exports.createReport = async (req, res) => {
   }
 };
 
-exports.updateReport = async (req, res) => {
+updateReport = async (req, res) => {
   const { id } = req.params;
   const { titulo, descripcion, categoria, prioridad, estado, fechaFinalizacion } = req.body;
   try {
@@ -70,7 +70,7 @@ exports.updateReport = async (req, res) => {
   }
 };
 
-exports.deleteReport = async (req, res) => {
+deleteReport = async (req, res) => {
   const { id } = req.params;
   try {
     await prisma.reporte.delete({
@@ -82,3 +82,5 @@ exports.deleteReport = async (req, res) => {
     res.status(500).json({ error: 'Something went wrong!' });
   }
 };
+
+export { getAllReports, getReportById, createReport, updateReport, deleteReport}

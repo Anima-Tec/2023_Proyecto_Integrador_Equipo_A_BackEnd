@@ -1,6 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const userSupervisorController = require('../controllers/userSupervisorController');
+import {express} from'express';
+import {router} from express.Router();
+import {userSupervisorController} from'../controllers/userSupervisorController';
 
 router.get('/', userSupervisorController.getAllSupervisors);
 
