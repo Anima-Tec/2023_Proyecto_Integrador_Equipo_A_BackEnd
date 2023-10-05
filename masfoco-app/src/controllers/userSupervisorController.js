@@ -1,7 +1,7 @@
 import { PrismaClient } from'@prisma/client';
 const prisma = new PrismaClient();
 
-getAllSupervisors = async (req, res) => {
+const getAllSupervisors = async (req, res) => {
   try {
     const supervisors = await prisma.usuarioSupervisor.findMany();
     res.json(supervisors);
@@ -11,7 +11,7 @@ getAllSupervisors = async (req, res) => {
   }
 };
 
-getSupervisorById = async (req, res) => {
+const getSupervisorById = async (req, res) => {
   const { id } = req.params;
   try {
     const supervisor = await prisma.usuarioSupervisor.findUnique({
@@ -27,7 +27,7 @@ getSupervisorById = async (req, res) => {
   }
 };
 
-createSupervisor = async (req, res) => {
+const createSupervisor = async (req, res) => {
   const { nombre, correo } = req.body;
   try {
     const newSupervisor = await prisma.usuarioSupervisor.create({
@@ -43,7 +43,7 @@ createSupervisor = async (req, res) => {
   }
 };
 
-updateSupervisor = async (req, res) => {
+const updateSupervisor = async (req, res) => {
   const { id } = req.params;
   const { nombre, correo } = req.body;
   try {
@@ -61,7 +61,7 @@ updateSupervisor = async (req, res) => {
   }
 };
 
-deleteSupervisor = async (req, res) => {
+const deleteSupervisor = async (req, res) => {
   const { id } = req.params;
   try {
     await prisma.usuarioSupervisor.delete({

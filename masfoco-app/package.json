@@ -1,5 +1,6 @@
 {
   "name": "masfoco-app",
+  "type": "module",
   "version": "1.0.0",
   "description": "1. Clona este repositorio en tu máquina local.\r 2. Asegúrate de tener Node.js instalado.\r 3. Instala las dependencias usando `npm install`.\r 4. Crea un archivo `.env` en la raíz del proyecto y define las siguientes variables de entorno:",
   "main": ".src/app.js",

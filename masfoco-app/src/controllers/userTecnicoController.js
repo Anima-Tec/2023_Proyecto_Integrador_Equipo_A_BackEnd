@@ -1,7 +1,7 @@
 import { PrismaClient } from'@prisma/client';
 const prisma = new PrismaClient();
 
-getAllUserTecnicos = async (req, res) => {
+const getAllUserTecnicos = async (req, res) => {
   try {
     const userTecnicos = await prisma.usuarioTecnico.findMany();
     res.json(userTecnicos);
@@ -11,7 +11,7 @@ getAllUserTecnicos = async (req, res) => {
   }
 };
 
-getUserTecnicoById = async (req, res) => {
+const getUserTecnicoById = async (req, res) => {
   const { id } = req.params;
   try {
     const userTecnico = await prisma.usuarioTecnico.findUnique({
@@ -27,7 +27,7 @@ getUserTecnicoById = async (req, res) => {
   }
 };
 
-createUserTecnico = async (req, res) => {
+const createUserTecnico = async (req, res) => {
   const { nombre, correo } = req.body;
   try {
     const newUserTecnico = await prisma.usuarioTecnico.create({
@@ -43,7 +43,7 @@ createUserTecnico = async (req, res) => {
   }
 };
 
-updateUserTecnico = async (req, res) => {
+const updateUserTecnico = async (req, res) => {
   const { id } = req.params;
   const { nombre, correo } = req.body;
   try {
@@ -61,7 +61,7 @@ updateUserTecnico = async (req, res) => {
   }
 };
 
-deleteUserTecnico = async (req, res) => {
+const deleteUserTecnico = async (req, res) => {
   const { id } = req.params;
   try {
     await prisma.usuarioTecnico.delete({
