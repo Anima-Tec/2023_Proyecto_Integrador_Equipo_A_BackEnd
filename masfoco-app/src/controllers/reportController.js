@@ -3,11 +3,11 @@ const prisma = new PrismaClient();
 
 const getAllReports = async (req, res) => {
   try {
-    const reports = await prisma.reporte.findMany({
+    const reports = await prisma.report.findMany({
       include: {
-        usuario: {
+        user: {
           select: {
-            nombre: true,
+            name: true,
           },
         },
       },
@@ -16,13 +16,13 @@ const getAllReports = async (req, res) => {
     const reportsWithUserNames = reports.map((report) => {
       return {
         id: report.id,
-        titulo: report.titulo,
-        descripcion: report.descripcion,
-        categoria: report.categoria,
-        prioridad: report.prioridad,
-        estado: report.estado,
-        fechaCreacion: report.fechaCreacion,
-        usuario: report.usuario.nombre, 
+        title: report.title,
+        description: report.description,
+        category: report.category,
+        urgency: report.urgency,
+        status: report.status,
+        creationDate: report.creationDate,
+        user: report.user.name, 
       };
     });
 
@@ -36,7 +36,7 @@ const getAllReports = async (req, res) => {
 const getReportById = async (req, res) => {
   const { id } = req.params;
   try {
-    const report = await prisma.reporte.findUnique({
+    const report = await prisma.report.findUnique({
       where: { id: parseInt(id) },
     });
     if (!report) {
@@ -50,17 +50,17 @@ const getReportById = async (req, res) => {
 };
 
 const createReport = async (req, res) => {
-  const { titulo, descripcion, categoria, prioridad, estado, idUsuario } = req.body;
+  const { title, description, category, urgency, status, idUser } = req.body;
   try {
-    const newReport = await prisma.reporte.create({
+    const newReport = await prisma.report.create({
       data: {
-        titulo,
-        descripcion,
-        categoria,
-        prioridad,
-        estado,
-        idUsuario: parseInt(idUsuario),
-        fechaCreacion: new Date(),
+        title,
+        description,
+        category,
+        urgency,
+        status,
+        idUser: parseInt(idUser),
+        creationDate: new Date(),
       },
     });
     res.status(201).json(newReport);
@@ -72,17 +72,17 @@ const createReport = async (req, res) => {
 
 const updateReport = async (req, res) => {
   const { id } = req.params;
-  const { titulo, descripcion, categoria, prioridad, estado, fechaFinalizacion } = req.body;
+  const { title, description, category, urgency, status, endDate } = req.body;
   try {
-    const updatedReport = await prisma.reporte.update({
+    const updatedReport = await prisma.report.update({
       where: { id: parseInt(id) },
       data: {
-        titulo,
-        descripcion,
-        categoria,
-        prioridad,
-        estado,
-        fechaFinalizacion,
+        title,
+        description,
+        category,
+        urgency,
+        status,
+        endDate,
       },
     });
     res.json(updatedReport);
@@ -95,7 +95,7 @@ const updateReport = async (req, res) => {
 const deleteReport = async (req, res) => {
   const { id } = req.params;
   try {
-    await prisma.reporte.delete({
+    await prisma.report.delete({
       where: { id: parseInt(id) },
     });
     res.json({ message: 'Report deleted successfully' });

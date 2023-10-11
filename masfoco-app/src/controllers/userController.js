@@ -2,12 +2,13 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import enviromentController from '../middleware/authmddlw.js';
+import enviromentController from '../config/enviromentController.js';
 
+const secretKey = enviromentController.validateSecretKey();
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await prisma.usuario.findMany();
+    const users = await prisma.user.findMany();
     res.json(users);
   } catch (error) {
     console.error(error);
@@ -18,7 +19,7 @@ const getAllUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await prisma.usuario.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: parseInt(id) },
     });
     if (!user) {
@@ -32,45 +33,44 @@ const getUserById = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  //try {
-    const {nombre, correo, password} = req.body;
+  try {
+    const {name, email, password} = req.body;
 
     //encripta la pass y carga el user en la tabla
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.usuario.create({
+    const user = await prisma.user.create({
       data: {
-        nombre,
-        correo,
+        name,
+        email,
         password: hashedPassword,
       },
     });
 
-    res.json({ message: 'Usuario registrado con éxito' });
+    res.json({ message: 'User registered' });
 
-  //} catch (error) { 
+  } catch (error) { 
 
-    //res.status(500).json({ error: 'Error al registrar el usuario' });
+    res.status(500).json({ error: 'Error registering user' });
 
-  //}
+  }
 };
 
 const loginUser = async (req, res) => {
   
-const secretKey = enviromentController.validateSecretKey();
   try {
     //comprueba existencia
     const { email, password } = req.body;
-    const user = await prisma.usuario.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email },
     });
     if (!user) {
-      return res.status(401).json({ error: 'Credenciales incorrectas' });
+      return res.status(401).json({ error: 'Incorrect credentials' });
     }
 
     //compara
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return res.status(401).json({ error: 'Credenciales incorrectas' });
+      return res.status(401).json({ error: 'Incorrect credentials' });
     }
 
     //genera el token
@@ -78,20 +78,20 @@ const secretKey = enviromentController.validateSecretKey();
     res.json({ token });
 
   } catch (error) {
-    res.status(500).json({ error: 'Error al iniciar sesión' });
+    res.status(500).json({ error: 'Failed to login' });
   }
 };
 
 
 const updateUser = async (req, res) => {
   const { id } = req.params;
-  const { nombre, correo, idOficina } = req.body;
+  const { name, email, idOficina } = req.body;
   try {
-    const updatedUser = await prisma.usuario.update({
+    const updatedUser = await prisma.user.update({
       where: { id: parseInt(id) },
       data: {
-        nombre,
-        correo,
+        name,
+        email,
         idOficina: parseInt(idOficina),
       },
     });
@@ -105,7 +105,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   const { email } = req.params;
   try {
-    await prisma.usuario.delete({
+    await prisma.user.delete({
       where: { email: parseInt(email) },
     });
     res.json({ message: 'User deleted successfully' });

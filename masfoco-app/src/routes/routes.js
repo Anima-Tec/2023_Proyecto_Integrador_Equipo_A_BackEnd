@@ -17,9 +17,7 @@ router.put('/reports/:id', updateReport);
 router.delete('/reports/:id', deleteReport);
 
 router.use('/reports', router);
-router.get('/users', verifyToken, (req, res) => {
-  getAllUsers
-});
+router.get('/users', verifyToken, getAllUsers);
 
 router.get('/users/:id', getUserById);
 

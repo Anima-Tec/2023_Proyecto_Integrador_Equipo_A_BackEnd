@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import enviromentController from '../middleware/authmddlw.js';
+import enviromentController from '../config/enviromentController.js';
 
 function verifyToken(req, res, next) {
   const token = req.headers.authorization;

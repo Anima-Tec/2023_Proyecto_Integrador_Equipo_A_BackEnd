@@ -17,84 +17,84 @@ DATABASE_URL="mysql://root:@localhost:3306/masfocodb?schema=public"
 
 ## Endpoints
 
-### Obtener todos los usuarios
+### Obtener todos los users
 
 - Método: GET
 - Ruta: /users
-- Descripción: Obtiene todos los usuarios registrados en la aplicación.
-- Respuesta: Un arreglo JSON con todos los usuarios.
+- Descripción: Obtiene todos los users registrados en la aplicación.
+- Respuesta: Un arreglo JSON con todos los users.
 
-### Obtener un usuario por ID
+### Obtener un user por ID
 
 - Método: GET
 - Ruta: /users/:id
-- Descripción: Obtiene un usuario específico por su ID.
-- Parámetros de URL: `id` (número) - ID del usuario.
-- Respuesta: Objeto JSON que representa el usuario encontrado.
+- Descripción: Obtiene un user específico por su ID.
+- Parámetros de URL: `id` (número) - ID del user.
+- Respuesta: Objeto JSON que representa el user encontrado.
 
-### Crear un nuevo usuario
+### Crear un nuevo user
 
 - Método: POST
 - Ruta: /users
-- Descripción: Crea un nuevo usuario en la aplicación.
+- Descripción: Crea un nuevo user en la aplicación.
 - Datos requeridos en el cuerpo de la solicitud:
-  - `nombre` (cadena): Nombre del usuario.
-  - `correo` (cadena): Correo electrónico del usuario.
-  - `idOficina` (número): ID de la oficina a la que pertenece el usuario.
-- Respuesta: Objeto JSON que representa el usuario creado.
+  - `name` (cadena): Nombre del user.
+  - `email` (cadena): Correo electrónico del user.
+  - `idOficina` (número): ID de la oficina a la que pertenece el user.
+- Respuesta: Objeto JSON que representa el user creado.
 
-### Actualizar un usuario por ID
+### Actualizar un user por ID
 
 - Método: PUT
 - Ruta: /users/:id
-- Descripción: Actualiza un usuario existente por su ID.
-- Parámetros de URL: `id` (número) - ID del usuario a actualizar.
+- Descripción: Actualiza un user existente por su ID.
+- Parámetros de URL: `id` (número) - ID del user a actualizar.
 - Datos requeridos en el cuerpo de la solicitud:
-  - `nombre` (cadena): Nuevo nombre del usuario.
-  - `correo` (cadena): Nuevo correo electrónico del usuario.
-  - `idOficina` (número): Nuevo ID de la oficina a la que pertenece el usuario.
-- Respuesta: Objeto JSON que representa el usuario actualizado.
+  - `name` (cadena): Nuevo name del user.
+  - `email` (cadena): Nuevo email electrónico del user.
+  - `idOficina` (número): Nuevo ID de la oficina a la que pertenece el user.
+- Respuesta: Objeto JSON que representa el user actualizado.
 
-### Eliminar un usuario por ID
+### Eliminar un user por ID
 
 - Método: DELETE
 - Ruta: /users/:id
-- Descripción: Elimina un usuario específico por su ID.
-- Parámetros de URL: `id` (número) - ID del usuario a eliminar.
-- Respuesta: Mensaje JSON que indica que el usuario fue eliminado exitosamente.
+- Descripción: Elimina un user específico por su ID.
+- Parámetros de URL: `id` (número) - ID del user a eliminar.
+- Respuesta: Mensaje JSON que indica que el user fue eliminado exitosamente.
 
-### Obtener todos los usuarios técnicos
+### Obtener todos los users técnicos
 
 - Método: GET
 - Ruta: /technicians
-- Descripción: Obtiene todos los usuarios técnicos registrados en la aplicación.
-- Respuesta: Un arreglo JSON con todos los usuarios técnicos.
+- Descripción: Obtiene todos los users técnicos registrados en la aplicación.
+- Respuesta: Un arreglo JSON con todos los users técnicos.
 
-### Obtener un usuario técnico por ID
+### Obtener un user técnico por ID
 
 - Método: GET
 - Ruta: /technicians/:id
-- Descripción: Obtiene un usuario técnico específico por su ID.
-- Parámetros de URL: `id` (número) - ID del usuario técnico.
-- Respuesta: Objeto JSON que representa el usuario técnico encontrado.
+- Descripción: Obtiene un user técnico específico por su ID.
+- Parámetros de URL: `id` (número) - ID del user técnico.
+- Respuesta: Objeto JSON que representa el user técnico encontrado.
 
-### Crear un nuevo usuario técnico
+### Crear un nuevo user técnico
 
 - Método: POST
 - Ruta: /technicians
-- Descripción: Crea un nuevo usuario técnico en la aplicación.
+- Descripción: Crea un nuevo user técnico en la aplicación.
 - Datos requeridos en el cuerpo de la solicitud:
-  - `nombre` (cadena): Nombre del usuario técnico.
-  - `correo` (cadena): Correo electrónico del usuario técnico.
-- Respuesta: Objeto JSON que representa el usuario técnico creado.
+  - `name` (cadena): Nombre del user técnico.
+  - `email` (cadena): Correo electrónico del user técnico.
+- Respuesta: Objeto JSON que representa el user técnico creado.
 
-### Eliminar un usuario técnico por ID
+### Eliminar un user técnico por ID
 
 - Método: DELETE
 - Ruta: /technicians/:id
-- Descripción: Elimina un usuario técnico específico por su ID.
-- Parámetros de URL: `id` (número) - ID del usuario técnico a eliminar.
-- Respuesta: Mensaje JSON que indica que el usuario técnico fue eliminado exitosamente.
+- Descripción: Elimina un user técnico específico por su ID.
+- Parámetros de URL: `id` (número) - ID del user técnico a eliminar.
+- Respuesta: Mensaje JSON que indica que el user técnico fue eliminado exitosamente.
 
 ### Obtener todos los supervisores
 
@@ -117,8 +117,8 @@ DATABASE_URL="mysql://root:@localhost:3306/masfocodb?schema=public"
 - Ruta: /supervisors
 - Descripción: Crea un nuevo supervisor en la aplicación.
 - Datos requeridos en el cuerpo de la solicitud:
-  - `nombre` (cadena): Nombre del supervisor.
-  - `correo` (cadena): Correo electrónico del supervisor.
+  - `name` (cadena): Nombre del supervisor.
+  - `email` (cadena): Correo electrónico del supervisor.
 - Respuesta: Objeto JSON que representa el supervisor creado.
 
 ### Eliminar un supervisor por ID

@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE `Localidad` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nombre` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -9,7 +9,7 @@ CREATE TABLE `Localidad` (
 -- CreateTable
 CREATE TABLE `Institucion` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nombre` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
     `dominio` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -18,7 +18,7 @@ CREATE TABLE `Institucion` (
 -- CreateTable
 CREATE TABLE `Oficina` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nombre` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
     `direccion` VARCHAR(191) NOT NULL,
     `piso` INTEGER NULL,
     `idLocalidad` INTEGER NOT NULL,
@@ -28,27 +28,28 @@ CREATE TABLE `Oficina` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Usuario` (
+CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `nombre` VARCHAR(191) NOT NULL,
-    `correo` VARCHAR(191) NOT NULL,
+    `name` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
     `password` VARCHAR(191) NOT NULL,
     `oficinaId` INTEGER NULL,
 
+    UNIQUE INDEX `User_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Reporte` (
+CREATE TABLE `Report` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `titulo` VARCHAR(191) NOT NULL,
-    `descripcion` VARCHAR(191) NOT NULL,
-    `categoria` VARCHAR(191) NOT NULL,
-    `fechaCreacion` DATETIME(3) NOT NULL,
-    `fechaFinalizacion` DATETIME(3) NULL,
-    `idUsuario` INTEGER NOT NULL,
-    `estado` ENUM('Abierto', 'EnProgreso', 'EnRevision', 'Cerrado') NOT NULL,
-    `prioridad` ENUM('Low', 'Medium', 'High', 'Critical') NOT NULL,
+    `title` VARCHAR(191) NOT NULL,
+    `description` VARCHAR(191) NOT NULL,
+    `category` VARCHAR(191) NOT NULL,
+    `creationDate` DATETIME(3) NOT NULL,
+    `endDate` DATETIME(3) NULL,
+    `idUser` INTEGER NOT NULL,
+    `status` ENUM('Abierto', 'EnProgreso', 'EnRevision', 'Cerrado') NOT NULL,
+    `urgency` ENUM('Low', 'Medium', 'High', 'Critical') NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -60,7 +61,7 @@ ALTER TABLE `Oficina` ADD CONSTRAINT `Oficina_idLocalidad_fkey` FOREIGN KEY (`id
 ALTER TABLE `Oficina` ADD CONSTRAINT `Oficina_idInstitucion_fkey` FOREIGN KEY (`idInstitucion`) REFERENCES `Institucion`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Usuario` ADD CONSTRAINT `Usuario_oficinaId_fkey` FOREIGN KEY (`oficinaId`) REFERENCES `Oficina`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `User` ADD CONSTRAINT `User_oficinaId_fkey` FOREIGN KEY (`oficinaId`) REFERENCES `Oficina`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Reporte` ADD CONSTRAINT `Reporte_idUsuario_fkey` FOREIGN KEY (`idUsuario`) REFERENCES `Usuario`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Report` ADD CONSTRAINT `Report_idUser_fkey` FOREIGN KEY (`idUser`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

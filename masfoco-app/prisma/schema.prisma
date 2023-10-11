@@ -12,66 +12,66 @@ datasource db {
 
 model Localidad {
   id          Int       @id @default(autoincrement())
-  nombre      String
+  name        String
   Institucion Oficina[] @relation("LocalidadInstitucion")
 }
 
 model Institucion {
   id       Int       @id @default(autoincrement())
-  nombre   String
+  name     String
   dominio  String
   oficinas Oficina[] @relation("LocalidadInstitucion")
 }
 
 model Oficina {
   id            Int         @id @default(autoincrement())
-  nombre        String
+  name          String
   direccion     String
   piso          Int?
   idLocalidad   Int         @map("idLocalidad")
   idInstitucion Int         @map("idInstitucion")
   Localidad     Localidad   @relation("LocalidadInstitucion", fields: [idLocalidad], references: [id])
   Institucion   Institucion @relation("LocalidadInstitucion", fields: [idInstitucion], references: [id])
-  usuarios      Usuario[]
+  users         User[]
 }
 
-model Usuario {
-  id        Int       @id @default(autoincrement())
-  nombre    String
-  correo    String    @unique
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
   password  String
-  Oficina   Oficina?  @relation(fields: [oficinaId], references: [id])
+  Oficina   Oficina? @relation(fields: [oficinaId], references: [id])
   oficinaId Int?
-  Reporte   Reporte[]
+  Report    Report[]
 }
 
 enum Role {
   Supervisor
   Tecnico
-  Usuario
+  User
 }
 
-model Reporte {
-  id                Int       @id @default(autoincrement())
-  titulo            String
-  descripcion       String
-  categoria         String
-  fechaCreacion     DateTime
-  fechaFinalizacion DateTime?
-  idUsuario         Int       @map("idUsuario")
-  usuario           Usuario   @relation(fields: [idUsuario], references: [id])
-  estado            Estado
-  prioridad         Prioridad
+model Report {
+  id           Int       @id @default(autoincrement())
+  title        String
+  description  String
+  category     String
+  creationDate DateTime
+  endDate      DateTime?
+  idUser       Int       @map("idUser")
+  user         User      @relation(fields: [idUser], references: [id])
+  status       Status
+  urgency      Urgency
 }
 
-enum Estado {
+enum Status {
   Abierto
   EnProgreso
   EnRevision
   Cerrado
 }
 
-enum Prioridad {
+enum Urgency {
   Low
   Medium
   High
