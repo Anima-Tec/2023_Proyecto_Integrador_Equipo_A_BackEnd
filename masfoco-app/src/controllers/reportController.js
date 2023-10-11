@@ -3,8 +3,30 @@ const prisma = new PrismaClient();
 
 const getAllReports = async (req, res) => {
   try {
-    const reports = await prisma.reporte.findMany();
-    res.json(reports);
+    const reports = await prisma.reporte.findMany({
+      include: {
+        usuario: {
+          select: {
+            nombre: true,
+          },
+        },
+      },
+    });
+    
+    const reportsWithUserNames = reports.map((report) => {
+      return {
+        id: report.id,
+        titulo: report.titulo,
+        descripcion: report.descripcion,
+        categoria: report.categoria,
+        prioridad: report.prioridad,
+        estado: report.estado,
+        fechaCreacion: report.fechaCreacion,
+        usuario: report.usuario.nombre, 
+      };
+    });
+
+    res.json(reportsWithUserNames);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Something went wrong!' });

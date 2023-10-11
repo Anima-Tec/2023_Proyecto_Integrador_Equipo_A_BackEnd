@@ -7,69 +7,73 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url   = env("DATABASE_URL")
+  url      = "mysql://root:@localhost:3306/masfocodb?schema=public"
 }
 
-
 model Localidad {
-  id     Int     @id @default(autoincrement())
-  nombre String  
+  id          Int       @id @default(autoincrement())
+  nombre      String
   Institucion Oficina[] @relation("LocalidadInstitucion")
 }
 
 model Institucion {
-  id       Int      @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   nombre   String
-  dominio  String   
+  dominio  String
   oficinas Oficina[] @relation("LocalidadInstitucion")
 }
 
 model Oficina {
-  id          Int       @id @default(autoincrement())
-  nombre      String    
-  direccion   String    
-  piso        Int?
-  idLocalidad Int       @map("idLocalidad")
-  idInstitucion Int     @map("idInstitucion")
-  Localidad   Localidad @relation("LocalidadInstitucion", fields: [idLocalidad], references: [id])
-  Institucion Institucion @relation("LocalidadInstitucion", fields: [idInstitucion], references: [id])
-  usuarios    Usuario[]
+  id            Int         @id @default(autoincrement())
+  nombre        String
+  direccion     String
+  piso          Int?
+  idLocalidad   Int         @map("idLocalidad")
+  idInstitucion Int         @map("idInstitucion")
+  Localidad     Localidad   @relation("LocalidadInstitucion", fields: [idLocalidad], references: [id])
+  Institucion   Institucion @relation("LocalidadInstitucion", fields: [idInstitucion], references: [id])
+  usuarios      Usuario[]
 }
+
 model Usuario {
-  id       Int       @id @default(autoincrement())
-  nombre   String  
-  correo   String  
-  idOficina Int      @map("idOficina")
-  oficina  Oficina   @relation(fields: [idOficina], references: [id])
-  reportes Reporte[]
-  role  Role 
+  id        Int       @id @default(autoincrement())
+  nombre    String
+  correo    String    @unique
+  password  String
+  Oficina   Oficina?  @relation(fields: [oficinaId], references: [id])
+  oficinaId Int?
+  Reporte   Reporte[]
 }
+
 enum Role {
- Supervisor 
- Tecnico
- Usuario 
+  Supervisor
+  Tecnico
+  Usuario
 }
+
 model Reporte {
-  id               Int       @id @default(autoincrement())
-  titulo           String   
-  descripcion      String   
-  categoria        String    
-  fechaCreacion    DateTime
+  id                Int       @id @default(autoincrement())
+  titulo            String
+  descripcion       String
+  categoria         String
+  fechaCreacion     DateTime
   fechaFinalizacion DateTime?
-  idUsuario        Int       @map("idUsuario")
-  usuario          Usuario   @relation(fields: [idUsuario], references: [id])
-  estado Estado
-  prioridad Prioridad
+  idUsuario         Int       @map("idUsuario")
+  usuario           Usuario   @relation(fields: [idUsuario], references: [id])
+  estado            Estado
+  prioridad         Prioridad
 }
+
 enum Estado {
- nuevo 
- enProceso
- enRevision
- hecho 
+  Abierto
+  EnProgreso
+  EnRevision
+  Cerrado
 }
+
 enum Prioridad {
-Low
-medium
-high
-critical 
+  Low
+  Medium
+  High
+  Critical
 }
