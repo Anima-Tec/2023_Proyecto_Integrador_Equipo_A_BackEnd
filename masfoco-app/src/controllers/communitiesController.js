@@ -1,7 +1,7 @@
 import { PrismaClient } from'@prisma/client';
 const prisma = new PrismaClient();
 
-const getReports = async (req, res) => {
+const getAllReports = async (req, res) => {
   try {
     const reports = await prisma.report.findMany({
       include: {
@@ -18,7 +18,7 @@ const getReports = async (req, res) => {
         id: report.id,
         title: report.title,
         description: report.description,
-        image: report.image,
+        category: report.category,
         urgency: report.urgency,
         status: report.status,
         creationDate: report.creationDate,
@@ -50,15 +50,15 @@ const getReportById = async (req, res) => {
 };
 
 const createReport = async (req, res) => {
-  const { title, description, image, urgency, idUser } = req.body;
+  const { title, description, category, urgency, status, idUser } = req.body;
   try {
     const newReport = await prisma.report.create({
       data: {
         title,
         description,
-        image,
+        category,
         urgency,
-        status: "New",
+        status,
         idUser: parseInt(idUser),
         creationDate: new Date(),
       },
@@ -79,7 +79,7 @@ const updateReport = async (req, res) => {
       data: {
         title,
         description,
-        status,
+        category,
         urgency,
         status,
         endDate,
@@ -105,4 +105,4 @@ const deleteReport = async (req, res) => {
   }
 };
 
-export { getReports, getReportById, updateReport, deleteReport, createReport}
+export { getAllReports, getReportById, updateReport, deleteReport, createReport}

@@ -11,38 +11,45 @@ datasource db {
 }
 
 model Localidad {
-  id          Int       @id @default(autoincrement())
-  name        String
-  Institucion Oficina[] @relation("LocalidadInstitucion")
+  id        Int         @id @default(autoincrement())
+  name      String
+  Community Community[] @relation("CommunityLocalidad")
+  Oficina   Oficina[]   @relation("OficinaLocalidad")
 }
 
-model Institucion {
-  id       Int       @id @default(autoincrement())
-  name     String
-  dominio  String
-  oficinas Oficina[] @relation("LocalidadInstitucion")
+model Community {
+  id          Int       @id @default(autoincrement())
+  name        String
+  domain      String
+  idLocalidad Int       @map("idLocalidad")
+  Localidad   Localidad @relation("CommunityLocalidad", fields: [idLocalidad], references: [id])
+  Oficina     Oficina[] @relation("OficinaCommunity")
+  User        User[]    @relation("UserCommunity")
 }
 
 model Oficina {
-  id            Int         @id @default(autoincrement())
-  name          String
-  direccion     String
-  piso          Int?
-  idLocalidad   Int         @map("idLocalidad")
-  idInstitucion Int         @map("idInstitucion")
-  Localidad     Localidad   @relation("LocalidadInstitucion", fields: [idLocalidad], references: [id])
-  Institucion   Institucion @relation("LocalidadInstitucion", fields: [idInstitucion], references: [id])
-  users         User[]
+  id          Int       @id @default(autoincrement())
+  name        String
+  direccion   String
+  piso        Int?
+  idLocalidad Int       @map("idLocalidad")
+  idCommunity Int       @map("idCommunity")
+  Localidad   Localidad @relation("OficinaLocalidad", fields: [idLocalidad], references: [id])
+  Community   Community @relation("OficinaCommunity", fields: [idCommunity], references: [id])
+  users       User[]
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  Oficina   Oficina? @relation(fields: [oficinaId], references: [id])
-  oficinaId Int?
-  Report    Report[]
+  id          Int       @id @default(autoincrement())
+  name        String
+  email       String    @unique
+  password    String
+  Oficina     Oficina?  @relation(fields: [oficinaId], references: [id])
+  oficinaId   Int?
+  idCommunity Int
+  Community   Community @relation("UserCommunity", fields: [idCommunity], references: [id])
+  idLocalidad Int       @map("idLocalidad")
+  Report      Report[]
 }
 
 enum Role {
@@ -54,8 +61,8 @@ enum Role {
 model Report {
   id           Int       @id @default(autoincrement())
   title        String
-  description  String
-  category     String
+  description  String    @db.VarChar(500)
+  image        String?   @db.VarChar(200)
   creationDate DateTime
   endDate      DateTime?
   idUser       Int       @map("idUser")
@@ -65,10 +72,10 @@ model Report {
 }
 
 enum Status {
-  Abierto
-  EnProgreso
-  EnRevision
-  Cerrado
+  New
+  InProgress
+  InValidation
+  Closed
 }
 
 enum Urgency {

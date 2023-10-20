@@ -1,16 +1,16 @@
 import Express from'express';
-import {getAllReports, getReportById, createReport, updateReport, deleteReport} from '../controllers/reportController.js';
-import { getAllUsers, getUserById, createUser, updateUser, deleteUser, loginUser } from '../controllers/userController.js';
+import {getReports, getReportById, createReport, updateReport, deleteReport} from '../controllers/reportController.js';
+import { getAllUsers, getUserById, createUser, updateUser, deleteUser, loginUser, getUserByToken } from '../controllers/userController.js';
 import verifyToken from "../middleware/authmddlw.js";
 //import {getAllSupervisors, getSupervisorById, createSupervisor, updateSupervisor, deleteSupervisor } from'../controllers/userSupervisorController.js';
 //import {getAllUserTecnicos, getUserTecnicoById, createUserTecnico, updateUserTecnico, deleteUserTecnico} from'../controllers/userTecnicoController.js';
 
 const router = Express.Router();
-router.get('/reports/', getAllReports);
+router.get('/reports/', getReports);
 
 router.get('/reports/:id', getReportById);
 
-router.post('/reports/', createReport);
+router.post('/reports/', verifyToken, createReport);
 
 router.put('/reports/:id', updateReport);
 
@@ -18,12 +18,14 @@ router.delete('/reports/:id', deleteReport);
 
 router.use('/reports', router);
 router.get('/users', verifyToken, getAllUsers);
-
+;
 router.get('/users/:id', getUserById);
 
 router.post('/signup', createUser);
 
 router.post('/login', loginUser);
+
+router.get('/user', getUserByToken);
 
 router.put('/users/:id', updateUser);
 

@@ -1,10 +1,34 @@
 import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import enviromentController from '../config/enviromentController.js';
 
+const prisma = new PrismaClient();
 const secretKey = enviromentController.validateSecretKey();
+
+const getUserByToken = async (req, res) => {
+  const token = req.headers.authorization; 
+  console.log(token);
+  if (!token) {
+    return res.status(400).json({ error: 'Token not provided' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, secretKey);
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    res.status(401).json({ error: 'Invalid token' });
+  }
+};
 
 const getAllUsers = async (req, res) => {
   try {
@@ -36,7 +60,6 @@ const createUser = async (req, res) => {
   try {
     const {name, email, password} = req.body;
 
-    //encripta la pass y carga el user en la tabla
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: {
@@ -74,7 +97,7 @@ const loginUser = async (req, res) => {
     }
 
     //genera el token
-    const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user.id }, secretKey, { expiresIn: '10m' });
     res.json({ token });
 
   } catch (error) {
@@ -115,4 +138,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-export {getAllUsers, getUserById, createUser, updateUser, deleteUser, loginUser}
+export {getAllUsers, getUserById, createUser, updateUser, deleteUser, loginUser, getUserByToken}
