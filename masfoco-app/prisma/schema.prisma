@@ -11,20 +11,9 @@ datasource db {
 }
 
 model Localidad {
-  id        Int         @id @default(autoincrement())
-  name      String
-  Community Community[] @relation("CommunityLocalidad")
-  Oficina   Oficina[]   @relation("OficinaLocalidad")
-}
-
-model Community {
-  id          Int       @id @default(autoincrement())
-  name        String
-  domain      String
-  idLocalidad Int       @map("idLocalidad")
-  Localidad   Localidad @relation("CommunityLocalidad", fields: [idLocalidad], references: [id])
-  Oficina     Oficina[] @relation("OficinaCommunity")
-  User        User[]    @relation("UserCommunity")
+  id      Int       @id @default(autoincrement())
+  name    String
+  Oficina Oficina[] @relation("OficinaLocalidad")
 }
 
 model Oficina {
@@ -40,16 +29,32 @@ model Oficina {
 }
 
 model User {
+  id              Int               @id @default(autoincrement())
+  name            String
+  email           String            @unique
+  password        String
+  Oficina         Oficina?          @relation(fields: [oficinaId], references: [id])
+  oficinaId       Int?
+  userToCommunity UserToCommunity[]
+  idLocalidad     Int               @map("idLocalidad")
+  Report          Report[]
+}
+
+model Community {
+  id              Int               @id @default(autoincrement())
+  name            String
+  domain          String
+  code            String            @unique
+  Oficina         Oficina[]         @relation("OficinaCommunity")
+  userToCommunity UserToCommunity[]
+}
+
+model UserToCommunity {
   id          Int       @id @default(autoincrement())
-  name        String
-  email       String    @unique
-  password    String
-  Oficina     Oficina?  @relation(fields: [oficinaId], references: [id])
-  oficinaId   Int?
-  idCommunity Int
-  Community   Community @relation("UserCommunity", fields: [idCommunity], references: [id])
-  idLocalidad Int       @map("idLocalidad")
-  Report      Report[]
+  userId      Int
+  communityId Int
+  User        User      @relation(fields: [userId], references: [id])
+  Community   Community @relation(fields: [communityId], references: [id])
 }
 
 enum Role {

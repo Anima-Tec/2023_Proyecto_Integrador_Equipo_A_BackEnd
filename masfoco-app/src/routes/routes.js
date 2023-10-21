@@ -1,62 +1,69 @@
-import Express from'express';
-import {getReports, getReportById, createReport, updateReport, deleteReport} from '../controllers/reportController.js';
-import { getAllUsers, getUserById, createUser, updateUser, deleteUser, loginUser, getUserByToken } from '../controllers/userController.js';
+import Express from "express";
+import {
+  getReports,
+  getReportById,
+  updateReport,
+  deleteReport,
+  createReport,
+} from "../controllers/reportController.js";
+import {
+  createUserToCommunity,
+  joinCommunityByCode,
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+  loginUser,
+  getUserByToken,
+  getUserCommunities,
+} from "../controllers/userController.js";
+import {
+  getCommunity,
+  createCommunity,
+  updateCommunity,
+  deleteCommunity,
+} from "../controllers/communitiesController.js";
 import verifyToken from "../middleware/authmddlw.js";
-//import {getAllSupervisors, getSupervisorById, createSupervisor, updateSupervisor, deleteSupervisor } from'../controllers/userSupervisorController.js';
-//import {getAllUserTecnicos, getUserTecnicoById, createUserTecnico, updateUserTecnico, deleteUserTecnico} from'../controllers/userTecnicoController.js';
 
 const router = Express.Router();
-router.get('/reports/', getReports);
 
-router.get('/reports/:id', getReportById);
+router.get("/reports", verifyToken, getReports);
 
-router.post('/reports/', verifyToken, createReport);
+router.get("/reports/:id", verifyToken, getReportById);
 
-router.put('/reports/:id', updateReport);
+router.post("/reports", verifyToken, createReport);
 
-router.delete('/reports/:id', deleteReport);
+router.put("/reports/:id", verifyToken, updateReport);
 
-router.use('/reports', router);
-router.get('/users', verifyToken, getAllUsers);
-;
-router.get('/users/:id', getUserById);
+router.delete("/reports/:id", verifyToken, deleteReport);
 
-router.post('/signup', createUser);
+router.get("/users", verifyToken, getAllUsers);
 
-router.post('/login', loginUser);
+router.get("/users/:id", verifyToken, getUserById);
 
-router.get('/user', getUserByToken);
+router.post("/signup", createUser);
 
-router.put('/users/:id', updateUser);
+router.post("/login", loginUser);
 
-router.delete('/users/:id', deleteUser);
+router.get("/user", verifyToken, getUserByToken);
 
-//router.get('/', getAllSupervisors);
+router.put("/users/:id", verifyToken, updateUser);
 
-//router.get('/:id', getSupervisorById);
+router.delete("/users/:id", verifyToken, deleteUser);
 
-//router.post('/', createSupervisor);
+router.get("/communities/:id", verifyToken, getCommunity);
 
-//router.put('/:id', updateSupervisor);
+router.post("/communities", verifyToken, createCommunity);
 
-//router.delete('/:id', deleteSupervisor);
+router.put("/communities/:id", verifyToken, updateCommunity);
 
-//router.get('/', getAllUserTecnicos);
+router.delete("/communities/:id", verifyToken, deleteCommunity);
 
-//router.get('/:id', getUserTecnicoById);
+router.get("/user/:userId/communities", verifyToken, getUserCommunities);
 
-//router.post('/', createUserTecnico);
+router.post("/joinCommunityByCode", verifyToken, joinCommunityByCode);
 
-//router.put('/:id', updateUserTecnico);
+router.post("/createUserToCommunity", verifyToken, createUserToCommunity);
 
-//router.delete('/:id', deleteUserTecnico);
-
-//router.post('/signup', createUser);
-
-//router.post('/login', loginUser);
-
-//router.get('/protected', verifyToken, (req, res) => {
-//  res.json({ message: 'Si lees esto es porque estás autenticado', userId: req.userId });
-//});
-
-export default router ;
+export default router;

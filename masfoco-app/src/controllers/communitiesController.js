@@ -1,108 +1,112 @@
-import { PrismaClient } from'@prisma/client';
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-const getAllReports = async (req, res) => {
-  try {
-    const reports = await prisma.report.findMany({
-      include: {
-        user: {
-          select: {
-            name: true,
-          },
-        },
-      },
+const generateUniqueCode = async () => {
+  let uniqueCode;
+  do {
+    uniqueCode = Math.random().toString(36).substring(2, 7).toUpperCase();
+    const existingCommunity = await prisma.community.findUnique({
+      where: { code: uniqueCode },
     });
-    
-    const reportsWithUserNames = reports.map((report) => {
-      return {
-        id: report.id,
-        title: report.title,
-        description: report.description,
-        category: report.category,
-        urgency: report.urgency,
-        status: report.status,
-        creationDate: report.creationDate,
-        user: report.user.name, 
-      };
-    });
+  } while (existingCommunity);
 
-    res.json(reportsWithUserNames);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Something went wrong!' });
-  }
+  return uniqueCode;
 };
 
-const getReportById = async (req, res) => {
-  const { id } = req.params;
+const getCommunity = async (req, res) => {
   try {
-    const report = await prisma.report.findUnique({
-      where: { id: parseInt(id) },
+    const communityId = parseInt(req.params.id);
+    const community = await prisma.community.findUnique({
+      where: { id: communityId },
     });
-    if (!report) {
-      return res.status(404).json({ error: 'Report not found' });
+
+    if (!community) {
+      return res.status(404).json({ error: "Community not found" });
     }
-    res.json(report);
+
+    res.json(community);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Something went wrong!' });
+    res
+      .status(500)
+      .json({ error: "Error retrieving community", details: error.message });
   }
 };
 
-const createReport = async (req, res) => {
-  const { title, description, category, urgency, status, idUser } = req.body;
+const createCommunity = async (req, res) => {
   try {
-    const newReport = await prisma.report.create({
+    const { name, domain, idLocalidad } = req.body;
+
+    // Validar datos de entrada
+    if (!name || !domain || !idLocalidad) {
+      return res
+        .status(400)
+        .json({ error: "Name, domain, and idLocalidad are required fields" });
+    }
+
+    // Generar un código único
+    const code = await generateUniqueCode();
+
+    const community = await prisma.community.create({
       data: {
-        title,
-        description,
-        category,
-        urgency,
-        status,
-        idUser: parseInt(idUser),
-        creationDate: new Date(),
+        name,
+        domain,
+        code,
+        idLocalidad,
       },
     });
-    res.status(201).json(newReport);
+
+    res.json(community);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Something went wrong!' });
+    res
+      .status(500)
+      .json({ error: "Error creating community", details: error.message });
   }
 };
 
-const updateReport = async (req, res) => {
-  const { id } = req.params;
-  const { title, description, category, urgency, status, endDate } = req.body;
+const updateCommunity = async (req, res) => {
   try {
-    const updatedReport = await prisma.report.update({
-      where: { id: parseInt(id) },
+    const communityId = parseInt(req.params.id);
+    const { name, domain, idLocalidad } = req.body;
+
+    // Validar datos de entrada
+    if (!name || !domain || !idLocalidad) {
+      return res
+        .status(400)
+        .json({ error: "Name, domain, and idLocalidad are required fields" });
+    }
+
+    const community = await prisma.community.update({
+      where: { id: communityId },
       data: {
-        title,
-        description,
-        category,
-        urgency,
-        status,
-        endDate,
+        name,
+        domain,
+        idLocalidad,
       },
     });
-    res.json(updatedReport);
+
+    res.json(community);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Something went wrong!' });
+    res
+      .status(500)
+      .json({ error: "Error updating community", details: error.message });
   }
 };
 
-const deleteReport = async (req, res) => {
-  const { id } = req.params;
+const deleteCommunity = async (req, res) => {
   try {
-    await prisma.report.delete({
-      where: { id: parseInt(id) },
+    const communityId = parseInt(req.params.id);
+
+    await prisma.community.delete({
+      where: { id: communityId },
     });
-    res.json({ message: 'Report deleted successfully' });
+
+    res.json({ message: "Community deleted" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Something went wrong!' });
+    res
+      .status(500)
+      .json({ error: "Error deleting community", details: error.message });
   }
 };
 
-export { getAllReports, getReportById, updateReport, deleteReport, createReport}
+export { getCommunity, createCommunity, updateCommunity, deleteCommunity };
