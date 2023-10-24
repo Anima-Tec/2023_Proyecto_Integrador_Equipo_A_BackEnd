@@ -4,7 +4,7 @@ import router from "./src/routes/routes.js";
 import cors from "cors";
 import enviromentController from "./src/config/enviromentController.js";
 
-enviromentController.validatePort();
+const port = enviromentController.validatePort();
 enviromentController.validateDatabaseUrl();
 enviromentController.validateSecretKey();
 
@@ -14,7 +14,6 @@ app.use(Express.json());
 app.use(Express.urlencoded({ extended: false }));
 app.use(cors());
 app.use("/", router);
-
 
 app.use((req, res, next) => {
   const error = new Error("Not Found");

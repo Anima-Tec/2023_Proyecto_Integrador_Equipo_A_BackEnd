@@ -3,6 +3,8 @@ import {
   getReports,
   getReportById,
   updateReport,
+  getReportsByCommunity,
+  updateReportStatus,
   deleteReport,
   createReport,
 } from "../controllers/reportController.js";
@@ -11,6 +13,7 @@ import {
   joinCommunityByCode,
   getAllUsers,
   getUserById,
+  getUserRoleInCommunity,
   createUser,
   updateUser,
   deleteUser,
@@ -36,7 +39,15 @@ router.post("/reports", verifyToken, createReport);
 
 router.put("/reports/:id", verifyToken, updateReport);
 
+router.put("/reports/:id/status", verifyToken, updateReportStatus);
+
 router.delete("/reports/:id", verifyToken, deleteReport);
+
+router.get(
+  "/communities/:communityId/reports",
+  verifyToken,
+  getReportsByCommunity
+);
 
 router.get("/users", verifyToken, getAllUsers);
 
@@ -46,11 +57,17 @@ router.post("/signup", createUser);
 
 router.post("/login", loginUser);
 
-router.get("/user", verifyToken, getUserByToken);
+router.get("/user", getUserByToken);
 
 router.put("/users/:id", verifyToken, updateUser);
 
 router.delete("/users/:id", verifyToken, deleteUser);
+
+router.get(
+  "/users/:userId/role/:communityId",
+  verifyToken,
+  getUserRoleInCommunity
+);
 
 router.get("/communities/:id", verifyToken, getCommunity);
 

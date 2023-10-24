@@ -36,23 +36,25 @@ model User {
   Oficina         Oficina?          @relation(fields: [oficinaId], references: [id])
   oficinaId       Int?
   userToCommunity UserToCommunity[]
-  idLocalidad     Int               @map("idLocalidad")
   Report          Report[]
 }
 
 model Community {
   id              Int               @id @default(autoincrement())
   name            String
-  domain          String
+  image           String?
+  domain          String            @unique
   code            String            @unique
   Oficina         Oficina[]         @relation("OficinaCommunity")
   userToCommunity UserToCommunity[]
+  reports         Report[]
 }
 
 model UserToCommunity {
   id          Int       @id @default(autoincrement())
   userId      Int
   communityId Int
+  role        Role
   User        User      @relation(fields: [userId], references: [id])
   Community   Community @relation(fields: [communityId], references: [id])
 }
@@ -70,9 +72,11 @@ model Report {
   image        String?   @db.VarChar(200)
   creationDate DateTime
   endDate      DateTime?
-  idUser       Int       @map("idUser")
-  user         User      @relation(fields: [idUser], references: [id])
   status       Status
+  idUser       Int       @map("idUser")
+  idCommunity  Int       @map("idCommunity")
+  user         User      @relation(fields: [idUser], references: [id])
+  community    Community @relation(fields: [idCommunity], references: [id])
   urgency      Urgency
 }
 

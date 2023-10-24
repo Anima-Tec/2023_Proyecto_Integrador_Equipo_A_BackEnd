@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const generateUniqueCode = async () => {
@@ -35,24 +35,22 @@ const getCommunity = async (req, res) => {
 
 const createCommunity = async (req, res) => {
   try {
-    const { name, domain, idLocalidad } = req.body;
+    const { name, domain, image } = req.body;
 
-    // Validar datos de entrada
-    if (!name || !domain || !idLocalidad) {
+    if (!name || !domain) {
       return res
         .status(400)
-        .json({ error: "Name, domain, and idLocalidad are required fields" });
+        .json({ error: "Name and domain are required fields" });
     }
 
-    // Generar un código único
     const code = await generateUniqueCode();
 
     const community = await prisma.community.create({
       data: {
         name,
+        image,
         domain,
         code,
-        idLocalidad,
       },
     });
 
@@ -67,13 +65,12 @@ const createCommunity = async (req, res) => {
 const updateCommunity = async (req, res) => {
   try {
     const communityId = parseInt(req.params.id);
-    const { name, domain, idLocalidad } = req.body;
+    const { name, domain, image } = req.body;
 
-    // Validar datos de entrada
-    if (!name || !domain || !idLocalidad) {
+    if (!name || !domain || !image) {
       return res
         .status(400)
-        .json({ error: "Name, domain, and idLocalidad are required fields" });
+        .json({ error: "Name and domain are required fields" });
     }
 
     const community = await prisma.community.update({
@@ -81,7 +78,7 @@ const updateCommunity = async (req, res) => {
       data: {
         name,
         domain,
-        idLocalidad,
+        image,
       },
     });
 

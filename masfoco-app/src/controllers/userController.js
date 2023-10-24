@@ -1,7 +1,7 @@
-const { PrismaClient } = require("@prisma/client");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const enviromentController = require("../config/enviromentController.js");
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import enviromentController from "../config/enviromentController.js";
 
 const prisma = new PrismaClient();
 const secretKey = enviromentController.validateSecretKey();
@@ -76,33 +76,48 @@ const createUser = async (req, res) => {
 
     const domain = emailParts[1];
 
-    const community = await prisma.community.findUnique({
-      where: { domain },
-    });
-
-    if (!community) {
-      return res
-        .status(400)
-        .json({ error: "Community not found for the given email domain" });
-    }
+    const community =
+      (await prisma.community.findUnique({
+        where: { domain },
+      })) || null;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
+    const userData = {
+      name,
+      email,
+      password: hashedPassword,
+      userToCommunity: {
+        create: [
+          {
+            Community: {
+              connect: {
+                id: 1,
+              },
+            },
+            role: "User",
+          },
+        ],
+      },
+    };
+
+    if (community) {
+      userData.userToCommunity.create.push({
         Community: {
           connect: {
             id: community.id,
           },
         },
-      },
+      });
+    }
+
+    const user = await prisma.user.create({
+      data: userData,
     });
 
     res.json({ message: "User registered" });
   } catch (error) {
+    console.error("Error creating user:", error);
     res
       .status(500)
       .json({ error: "Error registering user", details: error.message });
@@ -187,7 +202,7 @@ const getUserCommunities = async (req, res) => {
     const userId = req.params.userId;
 
     const userCommunities = await prisma.userToCommunity.findMany({
-      where: { userId: userId },
+      where: { userId: parseInt(userId) },
       include: { Community: true },
     });
 
@@ -251,6 +266,7 @@ const createUserToCommunity = async (req, res) => {
       data: {
         userId,
         communityId,
+        role: "User",
       },
     });
 
@@ -262,12 +278,41 @@ const createUserToCommunity = async (req, res) => {
     });
   }
 };
+const getUserRoleInCommunity = async (req, res) => {
+  const { userId } = req.params;
+  const { communityId } = req.params;
+
+  try {
+    const userToCommunity = await prisma.userToCommunity.findFirst({
+      where: {
+        userId: parseInt(userId),
+        communityId: parseInt(communityId),
+      },
+    });
+
+    if (!userToCommunity) {
+      return res
+        .status(404)
+        .json({ error: "User is not associated with the provided community" });
+    }
+
+    const role = userToCommunity.role;
+
+    res.json({ userId, communityId, role });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "Something went wrong!", details: error.message });
+  }
+};
 
 export {
   createUserToCommunity,
   joinCommunityByCode,
   getAllUsers,
   getUserById,
+  getUserRoleInCommunity,
   createUser,
   updateUser,
   deleteUser,
