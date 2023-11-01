@@ -70,15 +70,20 @@ const createReport = async (req, res) => {
         image,
         urgency,
         status: "New",
+        // category: "Maintenance",
         idUser: parseInt(idUser),
         idCommunity: parseInt(idCommunity),
         creationDate: new Date(),
       },
     });
-    res.status(201).json(newReport);
+    res
+      .status(201)
+      .json(newReport);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Something went wrong!" });
+    res
+      .status(500)
+      .json({ error: "Something went wrong!" });
   }
 };
 
@@ -138,12 +143,14 @@ const deleteReport = async (req, res) => {
 const getReportsByCommunity = async (req, res) => {
   const { communityId } = req.params;
   const { status } = req.body;
+  // const { category } = req.body;
 
   try {
     const reports = await prisma.report.findMany({
       where: {
         idCommunity: parseInt(communityId),
         status: status,
+        // categoty: category,
       },
       include: {
         user: {
@@ -164,19 +171,53 @@ const getReportsByCommunity = async (req, res) => {
       creationDate: report.creationDate,
       user: report.user.name,
     }));
-    res.json(reportsWithUserNames);
+    res
+      .json(reportsWithUserNames);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Something went wrong!" });
+    res
+      .status(500)
+      .json({ error: "Something went wrong!" });
   }
 };
+
+const getReportComments = async (req, res) => {
+  const { reportId } = req.params;
+
+  try {
+    const comments = await prisma.reportcomments.findMany({
+      where: {
+        reportId: parseInt(reportId),
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    const commentsWithUserNames = comments.map((comment) => ({
+      id: comment.id,
+      user: comment.user.name,
+      comment: comment.comment,
+    }));
+    res
+      .json(commentsWithUserNames);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "Something went wrong!" });
+  }
+};
+
 
 const updateReportStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
   const token = req.headers.authorization;
-  console.log(id);
-  console.log(status);
   try {
     if (!token) {
       return res.status(401).json({ error: "Token not provided" });
@@ -243,12 +284,105 @@ const updateReportStatus = async (req, res) => {
     res.status(500).json({ error: "Something went wrong!" });
   }
 };
+const updateReportRelevance = async (req, res) => {
+  const { id } = req.params;
+  const token = req.headers.authorization;
+  try {
+    if (!token) {
+      return res.status(401).json({ error: "Token not provided" });
+    }
+
+    const tokenPayload = jwt.verify(token, secretKey);
+
+    const user = tokenPayload;
+
+    const report = await prisma.report.findUnique({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    if (!report) {
+      return res.status(404).json({ error: "Report not found" });
+    }
+
+    const canGivePriority = await prisma.reportrelevance.findUnique({
+      where: {
+        userId: user.id,
+        reportId: report.id,
+      },
+    });
+    if (canGivePriority) { 
+      return res
+      .status(409)
+      .json({ error: "Previously, the user give priority to the same report." });
+    }
+    
+    const newReportPriority = await prisma.reportrelevance.create({
+      data: {
+        userId: user.id,
+        reportId: report.id,
+      },
+    });
+
+    return res
+      .status(200)
+      .json(newReportPriority);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong!" });
+  }
+};
+const postReportComment = async (req, res) => {
+  const { id } = req.params;
+  const token = req.headers.authorization;
+  const { comment } = req.body;
+
+  try {
+    if (!token) {
+      return res.status(401).json({ error: "Token not provided" });
+    }
+
+    const tokenPayload = jwt.verify(token, secretKey);
+
+    const user = tokenPayload;
+
+    const report = await prisma.report.findUnique({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    if (!report) {
+      return res.status(404).json({ error: "Report not found" });
+    }
+    
+    const newReportPriority = await prisma.reportcomments.create({
+      data: {
+        userId: user.id,
+        reportId: report.id,
+        comment: comment,
+      },
+    });
+
+    return res
+      .status(200)
+      .json(newReportPriority);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong!" });
+  }
+};
+
 export {
   getReports,
   getReportById,
   updateReport,
   deleteReport,
   createReport,
+  getReportComments,
   updateReportStatus,
   getReportsByCommunity,
+  updateReportRelevance,
+  postReportComment,
 };

@@ -3,10 +3,13 @@ import {
   getReports,
   getReportById,
   updateReport,
-  getReportsByCommunity,
-  updateReportStatus,
   deleteReport,
   createReport,
+  getReportComments,
+  updateReportStatus,
+  getReportsByCommunity,
+  updateReportRelevance,
+  postReportComment,
 } from "../controllers/reportController.js";
 import {
   createUserToCommunity,
@@ -40,6 +43,8 @@ router.post("/reports", verifyToken, createReport);
 router.put("/reports/:id", verifyToken, updateReport);
 
 router.put("/reports/:id/status", verifyToken, updateReportStatus);
+
+router.post("/reports/:id/relevance", verifyToken, updateReportRelevance);
 
 router.delete("/reports/:id", verifyToken, deleteReport);
 

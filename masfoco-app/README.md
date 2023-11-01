@@ -14,9 +14,9 @@ DATABASE_URL="mysql://root:@localhost:3306/masfocodb?schema=public"
 SECRET_KEY="topo_secretowaf89u983qjdiowac3d5c3d5c5cf"
 PORT=3000
 
-7. Asegúrate de tener el servicio mysql levantado.
-8. Ve a la carpeta del prisma con `cd .\prisma\`.
-9. Crea la base con `npx prisma db push`
-10. Vuelve a la raíz con `cd ..`
-11. Ejecuta la aplicación usando `node app.js`.
-12. La aplicación estará disponible en http://localhost:3000.
+8. Asegúrate de tener el servicio mysql levantado.
+9. Ve a la carpeta del prisma con `cd .\prisma\`.  
+10. Crea la base con `npx prisma db push`
+11. Vuelve a la raíz con `cd ..`
+12. Ejecuta la aplicación usando `node app.js`.
+13. La aplicación estará disponible en http://localhost:3000.
